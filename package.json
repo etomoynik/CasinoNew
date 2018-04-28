@@ -1,0 +1,61 @@
+{
+  "name": "express-rest-api-boilerplate",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development && node ./api/api.js",
+    "create-sqlite-db": "shx touch ./db/database.sqlite",
+    "drop-sqlite-db": "shx rm ./db/database.sqlite",
+    "lint": "eslint ./api/. ./config/. ./test/.",
+    "start": "npm run nodemon",
+    "nodemon": "nodemon --exec npm run dev",
+    "prepush": "npm test",
+    "pretest": "npm run lint",
+    "production": "cross-env NODE_ENV=production && node ./api/api.js",
+    "test": "npm run create-sqlite-db; cross-env NODE_ENV=test && nyc ava -s; npm run drop-sqlite-db",
+    "test-ci": "nyc ava --no-color"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  },
+  "ava": {
+    "require": [
+      "babel-register",
+      "babel-polyfill"
+    ],
+    "babel": "inherit"
+  },
+  "nyc": {
+    "exclude": [
+      "test"
+    ]
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.23.0",
+    "bcrypt-nodejs": "^0.0.3",
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.3",
+    "express": "^4.15.3",
+    "express-routes-mapper": "^1.0.1",
+    "helmet": "^3.6.1",
+    "jsonwebtoken": "^7.4.1",
+    "nodemon": "^1.11.0",
+    "nyc": "^11.0.1",
+    "pg": "^7.4.1",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.22.12",
+    "sequelize-cli": "^3.1.0",
+    "sqlite3": "^3.1.8",
+    "supertest": "^3.0.0"
+  },
+  "devDependencies": {
+    "ava": "^0.19.1",
+    "cross-env": "^5.1.4",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.3.0",
+    "husky": "^0.13.4",
+    "shx": "^0.2.2"
+  }
+}
