@@ -20,36 +20,44 @@ const EmployeeController = () => {
     console.log(req.body);
     const body = req.body;
 
+    if (!body) {
+      return res.status(400).json({ msg: 'No data in form' });
+    }
+
     if (body.password && body.email) {
       if (body.password !== body.password2) {
         return res.status(200).json({ msg: 'Passwords dont match' });
       }
-      return User
+      Employee.find({ where: { email: body.email } })
+      .then((emp) => {
+        if (emp) return res.status(500).json({ msg: 'User exists' });
+        User
         .create({
           name: body.name,
           surname: body.surname,
           date_birth: body.date,
-        }).then(user => {
+        })
+        .then(user => {
           Employee
-          .create({
-            email: body.email,
-            password: body.password,
-            UserId: user.id,
-            access_level: 1,
+          .findOrCreate({
+            where: {
+              email: body.email,
+              password: body.password,
+              UserId: user.id,
+              access_level: 1,
+            },
           })
-        .then((employee) => {
-          const token = authService.issue({ id: employee.id });
-
-          return res.status(200).json({ token });
-        });
+          .then((employee) => {
+            const token = authService.issue({ id: employee.id });
+            return res.status(200).json({ token });
+          });
         })
         .catch((err) => {
           console.log(err);
           return res.status(500).json({ msg: 'Internal server error' });
         });
+      });
     }
-
-    return res.status(400).json({ msg: 'No data in form' });
   };
 
   const login = (req, res) => {

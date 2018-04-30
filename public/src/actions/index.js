@@ -8,27 +8,16 @@ import {
 
 const ROOT_URL = 'http://localhost:2017';
 
-export function signinUser({ email, password }) {
+export function signinUser(email, password) {
   return function func(dispatch) {
-    // submit email password to server
     axios.post(`${ROOT_URL}/public/login`, { email, password })
       .then(response => {
-        // if req is good, update state to indicate authentication
         dispatch({ type: AUTH_USER });
-        // save jwt token
         localStorage.setItem('token', response.data.token);
-        // redirect to the route /feature
-        // axios.get(`${ROOT_URL}/private/user`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
-        //   .then(resp => {
-        //     console.log(resp.data);
-        //   })
-        //   .then(() => {
         console.log(localStorage.getItem('token'));
-        // });
       })
       .catch((err) => {
         console.log(err);
-        // if request bad, return error to user
         dispatch(authError('Bad login info'));
       });
   };
@@ -64,23 +53,25 @@ export function authError(error) {
   };
 }
 export function logoutUser() {
-  axios.get(`${ROOT_URL}/private/logout`, {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-  })
-    .then(response => {
-      console.log('action creator', response.data.message);
-      localStorage.deleteItem('token');
-      dispatch({
-        type: FETCH_MESSAGE,
-        payload: response.data.message,
-      });
+  return function func(dispatch) {
+    axios.get(`${ROOT_URL}/private/logout`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     })
-    .catch((err) => {
+      .then(response => {
+        console.log('action creator', response.data.message);
+        localStorage.removeItem('token');
+        dispatch({
+          type: FETCH_MESSAGE,
+          payload: response.data.message,
+        });
+      })
+      .catch((err) => {
       // if request bad, return error to user
-      dispatch(authError('Bad login info'));
-    });
-  return {
-    type: UNAUTH_USER,
+        dispatch(authError('Bad login info'));
+      });
+    return {
+      type: UNAUTH_USER,
+    };
   };
 }
 

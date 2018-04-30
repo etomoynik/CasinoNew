@@ -24,17 +24,7 @@ class Register extends Component {
         this.setState({...this.state, [item]: value});
     };
     handleFormSubmit() {
-        console.log(this.state.email)
         this.props.signupUser(this.state.email, this.state.password, this.state.password2, this.state.date, this.state.name, this.state.surname );
-    }
-    renderAlert() {
-        if (this.props.errorMessage) {
-            return (
-                <div className="alert alert-danger">
-                <strong>Oops!</strong> {this.props.errorMessage}
-                </div>
-            );
-        }
     }
     
     render() {
@@ -68,11 +58,10 @@ class Register extends Component {
                     />
                     <Navigation type='horizontal'>
                         <Button style={{
-                                width: "100%",
-                                margin: "0 auto"
+                                width: '100%',
+                                margin: '0 auto'
                             }}
                             type='submit'
-                            // onClick = {() => this.handleFormSubmit(this.state.email, this.state.password, this.state.password2, this.state.date, this.state.name,  this.state.surname)}
                             label='Register'/>
                     </Navigation>
                 </form>

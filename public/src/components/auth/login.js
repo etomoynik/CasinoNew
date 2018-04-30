@@ -3,14 +3,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {Input, Button, Navigation, Card} from 'react-toolbox';
 import { Field, reduxForm } from 'redux-form';
+import { Redirect } from 'react-router-dom';
 
 //  INNER IMPORTS
-import RRbutton from '../RRbutton'
+import RRbutton from '../RRbutton';
 import * as actions from '../../actions';
 
 class Login extends Component {
     constructor(props) {
         super(props);
+        console.log(this.props.authenticated)
         this.state = {
             email: '',
             password: '',
@@ -20,8 +22,8 @@ class Login extends Component {
     handleChange = (item, value) => {
         this.setState({...this.state, [item]: value});
     };
-    handleFormSubmit( email, password ) {
-        this.props.signinUser({ email, password });
+    handleFormSubmit() {
+        this.props.signinUser(this.state.email, this.state.password);
     }
     renderAlert() {
           if (this.props.errorMessage) {
@@ -32,7 +34,9 @@ class Login extends Component {
             );
         }
     }
+
     render() {
+        console.log(this.props)
         if (this.props.authenticated === true) {
             return <Redirect to='/home' />
         }
@@ -42,32 +46,32 @@ class Login extends Component {
                 <div style={{maxWidth: 300, margin: 'auto'}}>
                     <Card style={{width: '300px'}}>
                         <form style={{width: "50%", margin: 'auto'}} autoComplete="on" onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
-                            <Input type='text' hint='email' name='email' autoComplete='email'
+                            <Input label='email' type='email' hint='' name='email' autoComplete='email'
                                 value={this.state.email}
                                 onChange={this.handleChange.bind(this, 'email')}
                             />
-                            <Input type='password' hint='password' name='password' autoComplete='current-password'
+                            <Input label='password' type='password' hint='' name='password' autoComplete='current-password'
                                 value={this.state.password}
                                 onChange={this.handleChange.bind(this, 'password')}
                             />
+                            <Navigation type='horizontal'>
+                                <Button style={{
+                                        width: "50%",
+                                        margin: "0 auto"
+                                    }}
+                                    type='submit'
+                                    label='Login'
+                                />
+                                <RRbutton style={{
+                                        width: "50%",
+                                        margin: "0 auto"
+                                    }}
+                                    exact to='/register' 
+                                    label='Register'
+                                />
+                            </Navigation>
+                            {this.renderAlert()}
                         </form>
-
-                        <Navigation type='horizontal'>
-                            <Button style={{
-                                    width: "50%",
-                                    margin: "0 auto"
-                                }}
-                                onClick = {() => this.handleFormSubmit(this.state.email, this.state.password)}
-                                label='Login'
-                            />
-                            <RRbutton style={{
-                                    width: "50%",
-                                    margin: "0 auto"
-                                }}
-                                exact to='/register' 
-                                label='Register'
-                            />
-                        </Navigation>
                     </Card>
                 </div>
             </div>
@@ -75,12 +79,29 @@ class Login extends Component {
     }
 }
 
+function validate(formProps) {
+    const errors = {};
+
+    if (!formProps.email) {
+      errors.email = 'Please enter an email';
+    }
+  
+    if (!formProps.password) {
+      errors.password = 'Please enter an password';
+    }
+  
+    console.log(errors);
+    return errors;
+}
+
 Login = reduxForm({
-    form: 'signin'
+    form: 'signin',
+    validate,
 })(Login);
 
-function mapStateToProps(state) {
-    return { errorMessage: state.auth.error };
-}
+const mapStateToProps = (state) => ({
+    authenticated: state.auth.authenticated,
+    errorMessage: state.auth.error
+});
   
 export default connect(mapStateToProps, actions)(Login);
