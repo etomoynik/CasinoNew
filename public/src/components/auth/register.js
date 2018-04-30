@@ -23,9 +23,9 @@ class Register extends Component {
     handleChange = (item, value) => {
         this.setState({...this.state, [item]: value});
     };
-    handleFormSubmit( email, password, password2, date, name, surname ) {
-        console.log(email, password, password2, date, name, surname)
-        this.props.signupUser({ email, password, password2, date, name, surname });
+    handleFormSubmit() {
+        console.log(this.state.email)
+        this.props.signupUser(this.state.email, this.state.password, this.state.password2, this.state.date, this.state.name, this.state.surname );
     }
     renderAlert() {
         if (this.props.errorMessage) {
@@ -38,11 +38,12 @@ class Register extends Component {
     }
     
     render() {
+        const { handleSubmit, submitting } = this.props;
         return (
             <div style={{ flex: 1, padding: '4rem' }}>
-            <div style={{maxWidth: 300, margin: 'auto'}}>
-            <Card style={{width: '300px'}}>
-                <form style={{width: "50%", margin: 'auto'}} autoComplete="on" >
+            <div style={{ maxWidth: 300, margin: 'auto' }}>
+            <Card style={{ width: '300px' }}>
+                <form style={{ width: "50%", margin: 'auto' }} autoComplete="on" onSubmit={ handleSubmit(this.handleFormSubmit.bind(this)) }>
                     <Input label='name' type='text' hint='' name='name' autoComplete='name' required 
                         value={this.state.name}
                         onChange={this.handleChange.bind(this, 'name')}
@@ -65,17 +66,16 @@ class Register extends Component {
                     />
                     <DatePicker name='birthdate' label='Birthdate' onChange={this.handleChange.bind(this, 'date')} value={this.state.date} required 
                     />
-
+                    <Navigation type='horizontal'>
+                        <Button style={{
+                                width: "100%",
+                                margin: "0 auto"
+                            }}
+                            type='submit'
+                            // onClick = {() => this.handleFormSubmit(this.state.email, this.state.password, this.state.password2, this.state.date, this.state.name,  this.state.surname)}
+                            label='Register'/>
+                    </Navigation>
                 </form>
-                
-                <Navigation type='horizontal'>
-                    <Button style={{
-                            width: "100%",
-                            margin: "0 auto"
-                        }}
-                        onClick = {() => this.handleFormSubmit(this.state.email, this.state.password, this.state.password2, this.state.date, this.state.name,  this.state.surname)}
-                        label='Register'/>
-                </Navigation>
             </Card>
             </div>
             </div>
@@ -116,7 +116,7 @@ function validate(formProps) {
 
 Register = reduxForm({
     form: "signup",
-    validate
+    validate,
 })(Register);
 
 function mapStateToProps(state) {

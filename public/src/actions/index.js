@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { browserHistory } from 'react-router-dom';
 import {
   AUTH_USER,
   AUTH_ERROR,
@@ -35,9 +34,7 @@ export function signinUser({ email, password }) {
   };
 }
 
-export function signupUser({
-  email, password, password2, date, name, surname,
-}) {
+export function signupUser(email, password, password2, date, name, surname) {
   return function func(dispatch) {
     // submit email password to server
     axios.post(`${ROOT_URL}/public/register`, {
