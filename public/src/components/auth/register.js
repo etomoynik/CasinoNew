@@ -1,17 +1,31 @@
 //  NPM IMPORTS
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import {Input, Button, Navigation, Card} from 'react-toolbox'
+import {Input, Button, Navigation, Card, DatePicker} from 'react-toolbox'
 import { reduxForm, Field } from 'redux-form';
-import * as actions from '../../actions';
 //  INNER IMPORTS
 import RRbutton from '../RRbutton'
+import * as actions from '../../actions';
 
 class Register extends Component {
-    handleFormSubmit({ email, password, passwordConfirm }) {
-        this.props.signupUser({ email, password, password  });
-    
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: '',
+            password: '',
+            password2: '',
+            date: '',
+            name: '',
+            surname: '',
+        }
+    };
+
+    handleChange = (item, value) => {
+        this.setState({...this.state, [item]: value});
+    };
+    handleFormSubmit( email, password, password2, date, name, surname ) {
+        console.log(email, password, password2, date, name, surname)
+        this.props.signupUser({ email, password, password2, date, name, surname });
     }
     renderAlert() {
         if (this.props.errorMessage) {
@@ -28,13 +42,30 @@ class Register extends Component {
             <div style={{ flex: 1, padding: '4rem' }}>
             <div style={{maxWidth: 300, margin: 'auto'}}>
             <Card style={{width: '300px'}}>
-                <form style={{width: "50%", margin: 'auto'}} autoComplete="off" onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
-                    <Input type='text' hint='email' name='email'
+                <form style={{width: "50%", margin: 'auto'}} autoComplete="on" >
+                    <Input label='name' type='text' hint='' name='name' autoComplete='name' required 
+                        value={this.state.name}
+                        onChange={this.handleChange.bind(this, 'name')}
                     />
-                    <Input type='password' hint='password' name='password'
+                    <Input label='surname' type='text' hint='' name='surname' autoComplete='family-name' required 
+                        value={this.state.surname}
+                        onChange={this.handleChange.bind(this, 'surname')}
                     />
-                    <Input type='password' hint='confirm password' name='passwordConfirm'
+                    <Input label='email' type='email' hint='' name='email' autoComplete='email' required 
+                        value={this.state.email}
+                        onChange={this.handleChange.bind(this, 'email')}
                     />
+                    <Input label='password' type='password' hint='' name='password' required 
+                        value={this.state.password}
+                        onChange={this.handleChange.bind(this, 'password')}
+                    />
+                    <Input label='repeat password' type='password' hint='' name='password2' required 
+                        value={this.state.password2}
+                        onChange={this.handleChange.bind(this, 'password2')}
+                    />
+                    <DatePicker name='birthdate' label='Birthdate' onChange={this.handleChange.bind(this, 'date')} value={this.state.date} required 
+                    />
+
                 </form>
                 
                 <Navigation type='horizontal'>
@@ -42,12 +73,11 @@ class Register extends Component {
                             width: "100%",
                             margin: "0 auto"
                         }}
-                        action="submit"
+                        onClick = {() => this.handleFormSubmit(this.state.email, this.state.password, this.state.password2, this.state.date, this.state.name,  this.state.surname)}
                         label='Register'/>
                 </Navigation>
             </Card>
             </div>
-            {this.renderAlert()}
             </div>
         )
     }
@@ -55,11 +85,19 @@ class Register extends Component {
 
 function validate(formProps) {
     const errors = {};
-  
-    if (formProps.password !== formProps.passwordConfirm) {
-      errors.password = 'Passwords must match';
+    
+    if (!formProps.name) {
+        errors.name = 'Please enter a name';
     }
-  
+
+    if (!formProps.surname) {
+        errors.surname = 'Please enter a surname';
+    }
+
+    if (!formProps.birthdate) {
+        errors.birthdate = 'Please enter a surname';
+    }
+
     if (!formProps.email) {
       errors.email = 'Please enter an email';
     }
@@ -67,9 +105,9 @@ function validate(formProps) {
     if (!formProps.password) {
       errors.password = 'Please enter an password';
     }
-  
-    if (!formProps.passwordConfirm) {
-      errors.passwordConfirm = 'Please confirm the password';
+
+    if (formProps.password !== formProps.password2) {
+        errors.password = 'Passwords are different!';
     }
   
     console.log(errors);

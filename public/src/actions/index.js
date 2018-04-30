@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { browserHistory } from 'react-router';
+import { browserHistory } from 'react-router-dom';
 import {
   AUTH_USER,
   AUTH_ERROR,
@@ -10,7 +10,7 @@ import {
 const ROOT_URL = 'http://localhost:2017';
 
 export function signinUser({ email, password }) {
-  return function (dispatch) {
+  return function func(dispatch) {
     // submit email password to server
     axios.post(`${ROOT_URL}/public/login`, { email, password })
       .then(response => {
@@ -24,9 +24,8 @@ export function signinUser({ email, password }) {
         //     console.log(resp.data);
         //   })
         //   .then(() => {
-        browserHistory.push('/feature');
         console.log(localStorage.getItem('token'));
-          // });
+        // });
       })
       .catch((err) => {
         console.log(err);
@@ -36,10 +35,14 @@ export function signinUser({ email, password }) {
   };
 }
 
-export function signupUser({ email, password }) {
-  return function (dispatch) {
+export function signupUser({
+  email, password, password2, date, name, surname,
+}) {
+  return function func(dispatch) {
     // submit email password to server
-    axios.post(`${ROOT_URL}/public/register`, { email, password })
+    axios.post(`${ROOT_URL}/public/register`, {
+      email, password, password2, date, name, surname,
+    })
       .then(response => {
         // if req is good, update state to indicate authentication
         dispatch({ type: AUTH_USER });
@@ -64,14 +67,28 @@ export function authError(error) {
   };
 }
 export function logoutUser() {
-  localStorage.removeItem('token');
+  axios.get(`${ROOT_URL}/private/logout`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+  })
+    .then(response => {
+      console.log('action creator', response.data.message);
+      localStorage.deleteItem('token');
+      dispatch({
+        type: FETCH_MESSAGE,
+        payload: response.data.message,
+      });
+    })
+    .catch((err) => {
+      // if request bad, return error to user
+      dispatch(authError('Bad login info'));
+    });
   return {
     type: UNAUTH_USER,
   };
 }
 
 export function fetchMessage() {
-  return function (dispatch) {
+  return function func(dispatch) {
     // submit email password to server
     axios.get(`${ROOT_URL}/private/user`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },

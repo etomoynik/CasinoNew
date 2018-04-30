@@ -21,23 +21,26 @@ const EmployeeController = () => {
     const body = req.body;
 
     if (body.password && body.email) {
+      if (body.password !== body.password2) {
+        return res.status(200).json({ msg: 'Passwords dont match' });
+      }
       return User
         .create({
           name: body.name,
           surname: body.surname,
-          date_birth: body.birth,
+          date_birth: body.date,
         }).then(user => {
           Employee
           .create({
             email: body.email,
             password: body.password,
             UserId: user.id,
-            access_level: 2,
+            access_level: 1,
           })
         .then((employee) => {
           const token = authService.issue({ id: employee.id });
 
-          return res.status(200).json({ token, employee });
+          return res.status(200).json({ token });
         });
         })
         .catch((err) => {
@@ -46,7 +49,7 @@ const EmployeeController = () => {
         });
     }
 
-    return res.status(400).json({ msg: 'Passwords don\'t match' });
+    return res.status(400).json({ msg: 'No data in form' });
   };
 
   const login = (req, res) => {
@@ -67,7 +70,7 @@ const EmployeeController = () => {
 
           if (bcryptService.comparePassword(password, employee.password)) {
             const token = authService.issue({ id: employee.id });
-            Employee.findOne({ id: employee.id }).then((empl) => {
+            Employee.findOne({ where: { id: employee.id } }).then((empl) => {
               empl.updateAttributes({ last_login: Sequilize.fn('NOW') });
             });
             return res.status(200).json({ token, employee });
@@ -152,10 +155,12 @@ const EmployeeController = () => {
         return res.status(401).send('unauthorized');
       }
       const userId = decoded.id;
+      console.log(userId);
       // Fetch the user by id
-      Employee.findOne({ id: userId }).then((employee) => {
+      Employee.findOne({ where: { id: userId } }).then((employee) => {
         employee.updateAttributes({ last_logout: Sequilize.fn('NOW') });
       });
+      return res.status(200).send();
     }
     return res.status(500).json({ msg: 'Internal server error' });
   };

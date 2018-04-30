@@ -10,7 +10,7 @@ module.exports = {
   'POST /employee': 'EmployeeController.login',
   'PATCH /employee/:id': 'EmployeeController.patch',
   'DELETE /employee/:id': 'EmployeeController.remove',
-  'POST /logout': 'EmployeeController.logout',
+  'GET /logout': 'EmployeeController.logout',
 
   'GET /game': 'GameController.getAll',
   'GET /game/:id': 'GameController.get',

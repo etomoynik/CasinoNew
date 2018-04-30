@@ -1,14 +1,12 @@
 //  NPM IMPORTS
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom'
-import { connect } from 'react-redux'
-import {Input, Button, Navigation, Card} from 'react-toolbox'
+import { connect } from 'react-redux';
+import {Input, Button, Navigation, Card} from 'react-toolbox';
 import { Field, reduxForm } from 'redux-form';
 
 //  INNER IMPORTS
 import RRbutton from '../RRbutton'
 import * as actions from '../../actions';
-
 
 class Login extends Component {
     constructor(props) {
@@ -17,19 +15,16 @@ class Login extends Component {
             email: '',
             password: '',
         }
-    }
-    handleNameChange = (email, value) => {
-        this.setState({...this.state, [email]: value});
     };
-    handlePasswordChange = (password, value) => {
-        this.setState({...this.state, [password]: value});
+
+    handleChange = (item, value) => {
+        this.setState({...this.state, [item]: value});
     };
     handleFormSubmit( email, password ) {
-        console.log(email, password);
         this.props.signinUser({ email, password });
     }
     renderAlert() {
-      	if (this.props.errorMessage) {
+          if (this.props.errorMessage) {
             return (
             <div className="alert alert-danger">
                 <strong>Oops!</strong> {this.props.errorMessage}
@@ -38,7 +33,7 @@ class Login extends Component {
         }
     }
     render() {
-        if (this.props.isLoggedIn == true) {
+        if (this.props.authenticated === true) {
             return <Redirect to='/home' />
         }
         const { handleSubmit } = this.props;
@@ -49,11 +44,11 @@ class Login extends Component {
                         <form style={{width: "50%", margin: 'auto'}} autoComplete="on" onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
                             <Input type='text' hint='email' name='email' autoComplete='email'
                                 value={this.state.email}
-                                onChange={this.handleNameChange.bind(this, 'email')}
+                                onChange={this.handleChange.bind(this, 'email')}
                             />
                             <Input type='password' hint='password' name='password' autoComplete='current-password'
                                 value={this.state.password}
-                                onChange={this.handlePasswordChange.bind(this, 'password')}
+                                onChange={this.handleChange.bind(this, 'password')}
                             />
                         </form>
 
@@ -61,16 +56,17 @@ class Login extends Component {
                             <Button style={{
                                     width: "50%",
                                     margin: "0 auto"
-								}}
+                                }}
                                 onClick = {() => this.handleFormSubmit(this.state.email, this.state.password)}
                                 label='Login'
                             />
-                            <Button style={{
-									width: "50%",
-									margin: "0 auto"
-								}}
-                                
-							/>
+                            <RRbutton style={{
+                                    width: "50%",
+                                    margin: "0 auto"
+                                }}
+                                exact to='/register' 
+                                label='Register'
+                            />
                         </Navigation>
                     </Card>
                 </div>
@@ -80,11 +76,11 @@ class Login extends Component {
 }
 
 Login = reduxForm({
-	form: 'signin'
+    form: 'signin'
 })(Login);
 
 function mapStateToProps(state) {
-	return { errorMessage: state.auth.error };
+    return { errorMessage: state.auth.error };
 }
   
 export default connect(mapStateToProps, actions)(Login);
