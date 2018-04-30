@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 export default function(ComposedComponent) {
   class Authentication extends Component {
@@ -7,19 +8,10 @@ export default function(ComposedComponent) {
       router: React.PropTypes.object
     }
 
-    componentWillMount() {
-      if (!this.props.authenticated) {
-        this.context.router.push('/');
-      }
-    }
-
-    componentWillUpdate(nextProps) {
-      if (!nextProps.authenticated) {
-        this.context.router.push('/');
-      }
-    }
-
     render() {
+      if (!this.props.authenticated) {
+        return <Redirect to='/login' />
+    }
       return <ComposedComponent {...this.props} />
     }
   }
