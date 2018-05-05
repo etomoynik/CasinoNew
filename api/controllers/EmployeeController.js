@@ -8,12 +8,27 @@ const Sequilize = require('sequelize');
 const EmployeeController = () => {
   const get = (req, res) => {
     const id = req.params.id;
-    Employee.find({
-      where: { id },
-    })
-    .then(employee => {
-      res.json(employee);
-    });
+    Employee.findOne(
+      {
+        where: {
+          id,
+        },
+      },
+    )
+    .then(employee =>
+    Employee
+      .findOne(
+      {
+        include: [{
+          model: User,
+          where: {
+            id: employee.UserId,
+          },
+        }],
+      },
+      )
+    .then(empl => res.status(200).json({ empl }))
+    .catch(err => res.json('Server error')));
   };
 
   const register = (req, res) => {
@@ -45,6 +60,7 @@ const EmployeeController = () => {
               password: body.password,
               UserId: user.id,
               access_level: 1,
+              last_login: Sequilize.fn('NOW'),
             },
           })
           .then((employee) => {
@@ -65,31 +81,38 @@ const EmployeeController = () => {
     const password = req.body.password;
 
     if (email && password) {
-      Employee
-        .findOne({
+      Employee.findOne(
+        {
           where: {
             email,
           },
-        })
-        .then((employee) => {
-          if (!employee) {
-            return res.status(400).json({ msg: 'Bad Request: User not found' });
+        },
+      )
+      .then(employee =>
+      Employee
+        .findOne(
+        {
+          include: [{
+            model: User,
+            where: {
+              id: employee.UserId,
+            },
+          }],
+        },
+        )
+        .then(empl => {
+          if (bcryptService.comparePassword(password, empl.password)) {
+            const token = authService.issue({ id: empl.id });
+            empl.updateAttributes({ last_login: Sequilize.fn('NOW') });
+            return res.status(200).json({ token, empl });
           }
-
-          if (bcryptService.comparePassword(password, employee.password)) {
-            const token = authService.issue({ id: employee.id });
-            Employee.findOne({ where: { id: employee.id } }).then((empl) => {
-              empl.updateAttributes({ last_login: Sequilize.fn('NOW') });
-            });
-            return res.status(200).json({ token, employee });
-          }
-
           return res.status(401).json({ msg: 'Unauthorized' });
         })
+        .catch(err => res.status(401).json({ msg: 'Unauthorized' }))
         .catch((err) => {
           console.log(err);
           return res.status(500).json({ msg: 'Internal server error' });
-        });
+        }));
     }
   };
 

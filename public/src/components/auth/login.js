@@ -44,6 +44,7 @@ class Login extends Component {
                 <div style={{maxWidth: 300, margin: 'auto'}}>
                     <Card style={{width: '300px'}}>
                         <form id='login' style={{width: "50%", margin: 'auto'}} autoComplete="on" onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
+                            <section>
                             <Input label='email' type='email' hint='' name='email' autoComplete='email'
                                 value={this.state.email}
                                 onChange={this.handleChange.bind(this, 'email')}
@@ -51,7 +52,9 @@ class Login extends Component {
                             <Input label='password' type='password' hint='' name='password' autoComplete='current-password'
                                 value={this.state.password}
                                 onChange={this.handleChange.bind(this, 'password')}
+                                error={this.renderAlert()}
                             />
+                            </section>
                         </form>
                         <Navigation type='horizontal'>
                             <Button style={{
@@ -70,7 +73,6 @@ class Login extends Component {
                                 label='Register'
                             />
                         </Navigation>
-                        {this.renderAlert()}
                     </Card>
                 </div>
             </div>

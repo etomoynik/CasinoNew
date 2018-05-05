@@ -12,7 +12,7 @@ export function signinUser(email, password) {
   return function func(dispatch) {
     axios.post(`${ROOT_URL}/public/login`, { email, password })
       .then(response => {
-        dispatch({ type: AUTH_USER });
+        dispatch({ type: AUTH_USER, payload: response.data });
         localStorage.setItem('token', response.data.token);
         console.log(localStorage.getItem('token'));
       })
@@ -62,8 +62,7 @@ export function logoutUser() {
         console.log('action creator', response.data.message);
         localStorage.removeItem('token');
         dispatch({
-          type: FETCH_MESSAGE,
-          payload: response.data.message,
+          type: UNAUTH_USER,
         });
       })
       .catch((err) => {

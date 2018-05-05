@@ -9,7 +9,26 @@ export default function (state = {}, action) {
   console.log(action);
   switch (action.type) {
     case AUTH_USER:
-      return { ...state, authenticated: true };
+      console.log('resp data', action.payload);
+      if (!action.payload) {
+        return {
+          ...state,
+          authenticated: true,
+          // name: action.payload.data.empl.User.name,
+          // surname: action.payload.data.User.empl.surname,
+          // access_level: action.payload.data.empl.access_level,
+        };
+      }
+
+      return {
+        ...state,
+        authenticated: true,
+        name: action.payload.empl.User.name,
+        surname: action.payload.empl.User.surname,
+        access_level: action.payload.empl.access_level,
+      };
+
+
     case UNAUTH_USER:
       return { ...state, authenticated: false };
     case AUTH_ERROR:
