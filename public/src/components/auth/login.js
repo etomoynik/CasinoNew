@@ -12,7 +12,6 @@ import * as actions from '../../actions';
 class Login extends Component {
     constructor(props) {
         super(props);
-        console.log(this.props.authenticated)
         this.state = {
             email: '',
             password: '',
@@ -36,7 +35,6 @@ class Login extends Component {
     }
 
     render() {
-        console.log(this.props)
         if (this.props.authenticated === true) {
             return <Redirect to='/home' />
         }
@@ -45,7 +43,7 @@ class Login extends Component {
             <div style={{ flex: 1, padding: '4rem' }}>
                 <div style={{maxWidth: 300, margin: 'auto'}}>
                     <Card style={{width: '300px'}}>
-                        <form style={{width: "50%", margin: 'auto'}} autoComplete="on" onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
+                        <form id='login' style={{width: "50%", margin: 'auto'}} autoComplete="on" onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
                             <Input label='email' type='email' hint='' name='email' autoComplete='email'
                                 value={this.state.email}
                                 onChange={this.handleChange.bind(this, 'email')}
@@ -54,24 +52,25 @@ class Login extends Component {
                                 value={this.state.password}
                                 onChange={this.handleChange.bind(this, 'password')}
                             />
-                            <Navigation type='horizontal'>
-                                <Button style={{
-                                        width: "50%",
-                                        margin: "0 auto"
-                                    }}
-                                    type='submit'
-                                    label='Login'
-                                />
-                                <RRbutton style={{
-                                        width: "50%",
-                                        margin: "0 auto"
-                                    }}
-                                    exact to='/register' 
-                                    label='Register'
-                                />
-                            </Navigation>
-                            {this.renderAlert()}
                         </form>
+                        <Navigation type='horizontal'>
+                            <Button style={{
+                                    width: "50%",
+                                    margin: "0 auto"
+                                }}
+                                type='submit'
+                                form='login'
+                                label='Login'
+                            />
+                            <RRbutton style={{
+                                    width: "50%",
+                                    margin: "0 auto"
+                                }}
+                                exact to='/register' 
+                                label='Register'
+                            />
+                        </Navigation>
+                        {this.renderAlert()}
                     </Card>
                 </div>
             </div>

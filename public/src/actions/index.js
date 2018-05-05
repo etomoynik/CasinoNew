@@ -40,8 +40,9 @@ export function signupUser(email, password, password2, date, name, surname) {
       })
       .catch(error => {
         // if request bad, return error to user
-        console.log('error', error.response.data.error);
-        dispatch(authError(error.response.data.error));
+        console.log(error)
+        console.log('error', error.response.data.msg);
+        dispatch(authError(error.response.data.msg));
       });
   };
 }

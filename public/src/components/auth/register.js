@@ -1,7 +1,8 @@
 //  NPM IMPORTS
 import React, { Component } from 'react';
-import { connect } from 'react-redux'
-import {Input, Button, Navigation, Card, DatePicker} from 'react-toolbox'
+import { connect } from 'react-redux';
+import { Input, Button, Navigation, Card, DatePicker } from 'react-toolbox';
+import { Redirect } from 'react-router-dom';
 import { reduxForm, Field } from 'redux-form';
 //  INNER IMPORTS
 import RRbutton from '../RRbutton'
@@ -26,8 +27,19 @@ class Register extends Component {
     handleFormSubmit() {
         this.props.signupUser(this.state.email, this.state.password, this.state.password2, this.state.date, this.state.name, this.state.surname );
     }
-    
+    renderAlert() {
+        if (this.props.errorMessage) {
+          return (
+          <div className="alert alert-danger">
+              <strong>Oops!</strong> {this.props.errorMessage}
+          </div>
+          );
+      }
+    }
     render() {
+        if (this.props.authenticated === true) {
+            return <Redirect to='/home' />
+        }
         const { handleSubmit, submitting } = this.props;
         return (
             <div style={{ flex: 1, padding: '4rem' }}>
@@ -65,6 +77,7 @@ class Register extends Component {
                             label='Register'/>
                     </Navigation>
                 </form>
+                {this.renderAlert()}
             </Card>
             </div>
             </div>
@@ -108,8 +121,9 @@ Register = reduxForm({
     validate,
 })(Register);
 
-function mapStateToProps(state) {
-    return { errorMessage: state.auth.error };
-}
+const mapStateToProps = (state) => ({
+    authenticated: state.auth.authenticated,
+    errorMessage: state.auth.error
+});
 
 export default connect(mapStateToProps, actions)(Register);

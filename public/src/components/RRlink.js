@@ -11,7 +11,7 @@ const handleClick = (event, history, to) => {
 
 const RRLink = ({ to, exact, strict, ...rest }) =>
   <Route path={to} exact={exact} strict={strict} children={({ history, match }) => (
-    <Link {...rest} active={!!match} onClick={(event) => handleClick(event, history, to)} />
+    <Link {...rest} onClick={(event) => handleClick(event, history, to)} />
   )} />
 
 RRLink.propTypes = {
