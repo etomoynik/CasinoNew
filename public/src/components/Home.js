@@ -41,25 +41,31 @@ class Home extends Component {
     }
 
     employeeViewAccessControl(){
-        console.log((this.props.access_level))
+        // console.log("home component access_level",this.props.access_level)
         if (this.props.access_level == 1) 
-            return <RRLink exact to='/profile' label='Employees'/>
+            return <RRLink exact to='/employees' label='Employees'/>
     }
 
     render() {
-        console.log(this.props)
+        console.log("updated", this.props)
         if (this.props.authenticated === false) {
           return <Redirect to='/login' />
         }
+        
+        const { children } = this.props;
+
+        const childrenWithProps = React.Children.map(children, child =>
+            React.cloneElement(child, {...this.props}));
         return (
             <Layout>
-                <AppBar title='' leftIcon='menu' onLeftIconClick={this.toggleDrawerActive} fixed={true}>
+                <AppBar title='' leftIcon='menu' onLeftIconClick={this.toggleDrawerActive} fixed={true}>  
+                    <div>{`${this.props.name} ${this.props.surname}`}</div>
                     <Navigation type='horizontal'>
                         <RRLink exact to='/logout' label='Logout'/>
                     </Navigation>
                 </AppBar>
                 <div style={{ flex: 1, padding: '4rem' }}>
-                        {this.props.children}
+                    {childrenWithProps}
                 </div>
                 <NavDrawer active={this.state.drawerActive}
                     pinned={this.state.drawerPinned} permanentAt='xxxl'

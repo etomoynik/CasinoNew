@@ -7,9 +7,10 @@ module.exports = {
 
   'GET /employee': 'EmployeeController.getAll',
   'GET /employee/:id': 'EmployeeController.get',
+  // 'DELETE /employeeById/:id': 'EmployeeController.removeById',
   'POST /employee': 'EmployeeController.login',
   'PATCH /employee/:id': 'EmployeeController.patch',
-  'DELETE /employee/:id': 'EmployeeController.remove',
+  'DELETE /employee/:id': 'EmployeeController.removeById',
   'GET /logout': 'EmployeeController.logout',
 
   'GET /game': 'GameController.getAll',
@@ -35,6 +36,8 @@ module.exports = {
   'POST /penalty': 'PenaltyController.post',
   'PATCH /penalty/:id': 'PenaltyController.patch',
   'DELETE /penalty/:id': 'PenaltyController.remove',
+  'GET /penalty/byUserId/:id': 'PenaltyController.getByEmployeeId',
+  'POST /penalty/byUserId/:id': 'PenaltyController.postByEmployeeId',
 
   'GET /salary': 'SalaryController.getAll',
   'GET /salary/:id': 'SalaryController.get',

@@ -3,20 +3,21 @@ import {
   UNAUTH_USER,
   AUTH_ERROR,
   FETCH_MESSAGE,
+  FETCH_PENALTIES,
 } from '../actions/types';
 
 export default function (state = {}, action) {
   console.log(action);
   switch (action.type) {
     case AUTH_USER:
-      console.log('resp data', action.payload);
       if (!action.payload) {
+        console.log('did not recieved answer', action.payload);
         return {
           ...state,
           authenticated: true,
-          // name: action.payload.data.empl.User.name,
-          // surname: action.payload.data.User.empl.surname,
-          // access_level: action.payload.data.empl.access_level,
+          name: localStorage.getItem('name'),
+          surname: localStorage.getItem('surname'),
+          access_level: localStorage.getItem('access_level'),
         };
       }
 
@@ -34,8 +35,11 @@ export default function (state = {}, action) {
     case AUTH_ERROR:
       return { ...state, error: action.payload };
     case FETCH_MESSAGE:
-      console.log('action', action);
-      return { ...state, message: action.payload };
+      console.log('action fetch', action);
+      return { ...state, array: action.payload.data };
+    case FETCH_PENALTIES:
+      console.log('action fetch', action);
+      return { ...state, penalties: action.payload.data };
     default:
       return state;
   }

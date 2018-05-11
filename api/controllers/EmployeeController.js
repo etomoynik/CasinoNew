@@ -2,7 +2,7 @@ const Employee = require('../models/Employee');
 const User = require('../models/User');
 const authService = require('../services/auth.service');
 const bcryptService = require('../services/bcrypt.service');
-const Sequilize = require('sequelize');
+const Sequelize = require('sequelize');
 
 
 const EmployeeController = () => {
@@ -59,8 +59,8 @@ const EmployeeController = () => {
               email: body.email,
               password: body.password,
               UserId: user.id,
-              access_level: 1,
-              last_login: Sequilize.fn('NOW'),
+              access_level: 0,
+              last_login: Sequelize.fn('NOW'),
             },
           })
           .then((employee) => {
@@ -103,7 +103,7 @@ const EmployeeController = () => {
         .then(empl => {
           if (bcryptService.comparePassword(password, empl.password)) {
             const token = authService.issue({ id: empl.id });
-            empl.updateAttributes({ last_login: Sequilize.fn('NOW') });
+            empl.updateAttributes({ last_login: Sequelize.fn('NOW') });
             return res.status(200).json({ token, empl });
           }
           return res.status(401).json({ msg: 'Unauthorized' });
@@ -168,6 +168,34 @@ const EmployeeController = () => {
       });
   };
 
+  const removeById = (req, res) => {
+    const token = req.header('Authorization').split(' ')[1];
+    const fromId = authService.verify(token).id;
+    const toId = parseInt(req.params.id, 10);
+    Employee.findById(fromId, { attributes: ['access_level'] })
+      .then(fromEmp => {
+        Employee.findById(toId, { attributes: ['access_level'] })
+          .then(toEmp => {
+            if (fromEmp.access_level > toEmp.access_level) {
+              Employee.destroy({
+                where: { id: toId },
+              })
+                .then(() => {
+                  getAll(req, res);
+                })
+              .catch(err => {
+                res.status(500).json({ msg: err });
+              });
+            } else {
+              res.status(400).json({ msg: 'not enough access level' });
+            }
+          })
+          .catch(err => {
+            res.status(500).json({ msg: 'error' });
+          });
+      });
+  };
+
   const logout = (req, res) => {
     const parts = req.header('Authorization').split(' ');
     let token;
@@ -189,7 +217,7 @@ const EmployeeController = () => {
       console.log(userId);
       // Fetch the user by id
       Employee.findOne({ where: { id: userId } }).then((employee) => {
-        employee.updateAttributes({ last_logout: Sequilize.fn('NOW') });
+        employee.updateAttributes({ last_logout: Sequelize.fn('NOW') });
       });
       return res.status(200).send();
     }
@@ -204,6 +232,7 @@ const EmployeeController = () => {
     patch,
     remove,
     logout,
+    removeById,
   };
 };
 

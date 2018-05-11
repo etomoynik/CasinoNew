@@ -9,6 +9,7 @@ import Home from './components/Home';
 import Login from './components/auth/login';
 import Logout from './components/auth/logout';
 import Register from './components/auth/register';
+import Employees from './components/Employees';
 import Feature from './components/feature';
 import RequireAuth from './components/auth/require_auth';
 
@@ -30,8 +31,9 @@ ReactDOM.render(
       <div>
         <Route exact path="/" component={RequireAuth(Home)}/>
         <Route path="/login" component={Login}/>
-        <Route path="/logout" component={(Logout)}/>
+        <Route path="/logout" component={Logout}/>
         <Route path="/register" component={Register}/>
+        <Route path="/employees" component={RequireAuth(Employees)}/>
         <Route path="/home" component={RequireAuth(Home)}/>
       </div>
     </BrowserRouter>
