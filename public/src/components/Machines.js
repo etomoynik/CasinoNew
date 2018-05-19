@@ -1,9 +1,10 @@
 import Home from './Home';
-import SingleProfile from './SingleProfile';
+import MachineCard from './MachineCard';
+
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../actions/employees';
+import * as actions from '../actions/machines';
 import ProgressBar from 'react-toolbox';
 
 const styleProfileList = {
@@ -12,7 +13,7 @@ const styleProfileList = {
     flexWrap: "wrap",
 };
 
-class Employees extends Component {
+class Machines extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -21,22 +22,22 @@ class Employees extends Component {
 
     componentWillMount(){
         console.log(this.props)
-        this.props.fetchEmployees();
+        this.props.fetchMachines()
     }
 
     render() {
-        if (!this.props.employees) {
-            console.log('not loaded')
+        if (!this.props.machines) {
+            console.log('machines not loaded')
             return (<div />);
         }
         else {
-            console.log("loaded", this.props)
+            console.log("machines loaded", this.props.machines)
             return (
                 <Home>
                     <div style={{ display: "flex", justifyContent: "row" }}>
-                    {this.props.employees.employee.map((emp, key) => {
-                        return <SingleProfile
-                            emp={emp}
+                    {this.props.machines.map((machine, key) => {
+                        return <MachineCard
+                            machine={machine}
                             key={key}
                         />
                     }
@@ -49,7 +50,7 @@ class Employees extends Component {
     }
 }
 const mapStateToProps = (state) => ({
-    employees: state.employees.employees
+    machines: state.machines.machines
 });
 
-export default connect(mapStateToProps, actions)(Employees);
+export default connect(mapStateToProps, actions)(Machines);

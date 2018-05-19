@@ -10,6 +10,9 @@ import Login from './components/auth/login';
 import Logout from './components/auth/logout';
 import Register from './components/auth/register';
 import Employees from './components/Employees';
+import Games from './components/Games';
+import Players from './components/Players';
+import Machines from './components/Machines';
 import Feature from './components/feature';
 import RequireAuth from './components/auth/require_auth';
 
@@ -34,6 +37,9 @@ ReactDOM.render(
         <Route path="/logout" component={Logout}/>
         <Route path="/register" component={Register}/>
         <Route path="/employees" component={RequireAuth(Employees)}/>
+        <Route path="/machines" component={RequireAuth(Machines)}/>
+        <Route path="/players" component={RequireAuth(Players)}/>
+        <Route path="/games" component={RequireAuth(Games)}/>
         <Route path="/home" component={RequireAuth(Home)}/>
       </div>
     </BrowserRouter>

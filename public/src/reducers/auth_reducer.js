@@ -4,6 +4,9 @@ import {
   AUTH_ERROR,
   FETCH_MESSAGE,
   FETCH_PENALTIES,
+  FETCH_GAMES,
+  FETCH_MACHINES,
+  FETCH_PLAYERS,
 } from '../actions/types';
 
 export default function (state = {}, action) {
@@ -37,6 +40,15 @@ export default function (state = {}, action) {
     case FETCH_MESSAGE:
       console.log('action fetch', action);
       return { ...state, array: action.payload.data };
+    case FETCH_GAMES:
+      console.log('action fetch', action);
+      return { ...state, games: action.payload.data };
+    case FETCH_MACHINES:
+      console.log('action fetch', action);
+      return { ...state, machines: action.payload.data };
+    case FETCH_PLAYERS:
+      console.log('action fetch', action);
+      return { ...state, players: action.payload.data };
     case FETCH_PENALTIES:
       console.log('action fetch', action);
       return { ...state, penalties: action.payload.data };
@@ -44,3 +56,4 @@ export default function (state = {}, action) {
       return state;
   }
 }
+// TODO: раскидать редюсеры по разным файлам

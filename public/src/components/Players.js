@@ -1,9 +1,10 @@
 import Home from './Home';
-import SingleProfile from './SingleProfile';
+import PlayerCard from './PlayerCard';
+
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../actions/employees';
+import * as actions from '../actions/players';
 import ProgressBar from 'react-toolbox';
 
 const styleProfileList = {
@@ -12,7 +13,7 @@ const styleProfileList = {
     flexWrap: "wrap",
 };
 
-class Employees extends Component {
+class Players extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -20,23 +21,22 @@ class Employees extends Component {
     }
 
     componentWillMount(){
-        console.log(this.props)
-        this.props.fetchEmployees();
+        this.props.fetchPlayers()
     }
 
     render() {
-        if (!this.props.employees) {
-            console.log('not loaded')
+        if (!this.props.players) {
+            console.log('Players not loaded')
             return (<div />);
         }
         else {
-            console.log("loaded", this.props)
+            console.log("Players loaded", this.props.players)
             return (
                 <Home>
                     <div style={{ display: "flex", justifyContent: "row" }}>
-                    {this.props.employees.employee.map((emp, key) => {
-                        return <SingleProfile
-                            emp={emp}
+                    {this.props.players.map((player, key) => {
+                        return <PlayerCard
+                            player={player}
                             key={key}
                         />
                     }
@@ -49,7 +49,7 @@ class Employees extends Component {
     }
 }
 const mapStateToProps = (state) => ({
-    employees: state.employees.employees
+    players: state.players.players
 });
 
-export default connect(mapStateToProps, actions)(Employees);
+export default connect(mapStateToProps, actions)(Players);

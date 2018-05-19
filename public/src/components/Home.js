@@ -72,11 +72,11 @@ class Home extends Component {
                     onOverlayClick={ this.toggleDrawerActive }>
                     <Navigation type='vertical'>
                         <RRLink style={{width: "100%"}} exact to='/home' label='Home'/>
-                        <RRLink exact to='/profile' label='Profile'/>
                         {this.employeeViewAccessControl()} 
-                        <RRLink exact to='/game' label='Game'/>
-                        <RRLink exact to='/about' label='About us'/>
+                        <RRLink exact to='/players' label='Players'/>
                         <RRLink exact to='/machines' label='Machines'/>
+                        <RRLink exact to='/games' label='Games'/>
+                        <RRLink exact to='/about' label='About us'/>
                     </Navigation>
                 </NavDrawer>
             </Layout>
