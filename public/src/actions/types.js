@@ -8,3 +8,4 @@ export const FETCH_PLAYERS = 'fetch_players';
 export const FETCH_MACHINES = 'fetch_machines';
 export const FETCH_EMPLOYEES = 'fetch_employees';
 export const EMPLOYEES_ERROR = 'employees_error';
+export const FETCH_GAME_MACHINES = 'fetch_game_machines';

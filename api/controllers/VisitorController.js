@@ -3,7 +3,12 @@ const User = require('../models/User');
 
 const VisitorController = () => {
   const getAll = (req, res) => {
-    Visitor.findAll()
+    Visitor.findAll({
+      include: [{
+        model: User,
+      }],
+    },
+    )
       .then(visitor => {
         res.json(visitor);
       });

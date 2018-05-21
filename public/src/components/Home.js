@@ -71,7 +71,7 @@ class Home extends Component {
                     pinned={this.state.drawerPinned} permanentAt='xxxl'
                     onOverlayClick={ this.toggleDrawerActive }>
                     <Navigation type='vertical'>
-                        <RRLink style={{width: "100%"}} exact to='/home' label='Home'/>
+                        {/* <RRLink style={{width: "100%"}} exact to='/home' label='Home'/> */}
                         {this.employeeViewAccessControl()} 
                         <RRLink exact to='/players' label='Players'/>
                         <RRLink exact to='/machines' label='Machines'/>

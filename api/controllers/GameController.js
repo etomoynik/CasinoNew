@@ -1,4 +1,6 @@
 const Game = require('../models/Game');
+const User = require('../models/User');
+const Machine = require('../models/Machine');
 
 const GameController = () => {
   const getAll = (req, res) => {
@@ -18,6 +20,35 @@ const GameController = () => {
     });
   };
 
+  const getMachines = (req, res) => {
+    const id = req.params.id;
+    Machine.findAll({
+      where: { GameId: id },
+    })
+    .then(machines => {
+      Machine.count()
+      .then(count => {
+        res.json({ count, machines });
+      });
+    });
+  };
+
+  const postMachines = (req, res) => {
+    let gameId = req.params.id;
+    const machineId = req.body.machine_id;
+    if (gameId == -1) {
+      gameId = null;
+    }
+    console.log(req.body);
+    Machine.find({
+      where: { id: machineId },
+    })
+    .then(machine => {
+      machine.updateAttributes({ GameId: gameId })
+      .then(() => getMachines(req, res));
+    });
+  };
+
   const post = (req, res) => {
     const body = req.body;
     Game.create({
@@ -31,15 +62,18 @@ const GameController = () => {
 
   const patch = (req, res) => {
     const id = req.params.id;
-    const updates = req.body.updates;
+    const chance = req.body.chance;
     Game.find({
       where: { id },
     })
       .then(game => {
-        game.updateAttributes(updates);
+        game.updateAttributes({ chance });
       })
       .then(updatedgame => {
-        res.json(updatedgame);
+        res.json('updated');
+      })
+      .catch(err => {
+        res.header(400);
       });
   };
 
@@ -59,6 +93,8 @@ const GameController = () => {
     patch,
     remove,
     post,
+    getMachines,
+    postMachines,
   };
 };
 
