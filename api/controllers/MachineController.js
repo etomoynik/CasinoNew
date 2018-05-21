@@ -1,4 +1,6 @@
 const Machine = require('../models/Machine');
+const Game = require('../models/Game');
+
 
 const MachineController = () => {
   const getAll = (req, res) => {
@@ -33,14 +35,18 @@ const MachineController = () => {
   const patch = (req, res) => {
     const id = req.params.id;
     const updates = req.body.updates;
+    console.log("updates", updates);
     Machine.find({
       where: { id },
     })
-      .then(gameSession => {
-        gameSession.updateAttributes(updates);
+      .then(machine => {
+        machine.updateAttributes(updates);
       })
-      .then(updatedmachine => {
-        res.json(updatedmachine);
+      .then(() => {
+        Machine.findAll()
+        .then(machines => {
+          res.json(machines);
+        });
       });
   };
 

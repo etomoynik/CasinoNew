@@ -22,7 +22,14 @@ class MachineCard extends Component {
     constructor(props){
         super(props);
         this.state = {
+            is_working: this.props.machine.is_working
         };
+    }
+
+    fixMachine() {
+        this.props.fixMachine(this.props.machine.id);
+        this.setState({is_working: !this.state.is_working})
+        
     }
 
     render() {
@@ -35,7 +42,7 @@ class MachineCard extends Component {
                             margin: "0 auto" }}>
                 <div> Cash {this.props.machine.cash_amount} </div>
                 <div> Top cash {this.props.machine.top_cash_amount} </div>
-                {this.props.machine.isBroken? (<Button label="fix"/>) : "working"}
+                {!this.state.is_working? (<Button label="fix" onClick={() => this.fixMachine()}/>) : "working"}
             </div>
         </Card>
         )

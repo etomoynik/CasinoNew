@@ -39,6 +39,7 @@ class Machines extends Component {
                         return <MachineCard
                             machine={machine}
                             key={key}
+                            fixMachine={this.props.fixMachine}
                         />
                     }
                     )}

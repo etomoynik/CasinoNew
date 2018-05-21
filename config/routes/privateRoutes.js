@@ -15,8 +15,11 @@ module.exports = {
 
   'GET /game': 'GameController.getAll',
   'GET /game/:id': 'GameController.get',
+  'GET /game_machine/:id': 'GameController.getMachines',
+  'POST /game_machine/:id': 'GameController.postMachines',
   'POST /game': 'GameController.post',
   'PATCH /game/:id': 'GameController.patch',
+  'POST /game/patch/:id': 'GameController.patch',
   'DELETE /game/:id': 'GameController.remove',
 
   'GET /gamesession': 'GameSessionController.getAll',
@@ -28,6 +31,7 @@ module.exports = {
   'GET /machine': 'MachineController.getAll',
   'GET /machine/:id': 'MachineController.get',
   'POST /machine': 'MachineController.post',
+  'POST /machine_fix/:id': 'MachineController.patch',
   'PATCH /machine/:id': 'MachineController.patch',
   'DELETE /machine/:id': 'MachineController.remove',
 
