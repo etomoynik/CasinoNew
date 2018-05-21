@@ -15,6 +15,7 @@ import Players from './components/Players';
 import Machines from './components/Machines';
 import Feature from './components/feature';
 import RequireAuth from './components/auth/require_auth';
+import About from './components/About';
 
 import reducers from './reducers';
 import { AUTH_USER } from './actions/types';
@@ -41,6 +42,7 @@ ReactDOM.render(
         <Route path="/players" component={RequireAuth(Players)}/>
         <Route path="/games" component={RequireAuth(Games)}/>
         <Route path="/home" component={RequireAuth(Home)}/>
+        <Route path="/about" component={RequireAuth(About)}/>
       </div>
     </BrowserRouter>
   </Provider>
